@@ -62,7 +62,7 @@ const Signup = () => {
     if(!formData.password || !passwordRegex.test(formData.password) || formData.password.length<8){
       validationErrors.password = "Please provide a valid password"
     }
-    if(!formData.password===formData.confirmPassword){
+    if(formData.password!==formData.confirmPassword){
       validationErrors.confirmPassword = "Password's Don't Match"
     }
     if(formData.countryCode==""){

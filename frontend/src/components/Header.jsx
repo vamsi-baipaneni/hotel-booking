@@ -17,6 +17,7 @@ const Header = () => {
           {isLoggedIn?
           <>
           <Link className = "flex items-center px-4 text-md text-white font-bold hover:cursor-pointer hover:bg-white hover:text-blue-800" to = "/about">About</Link>
+          <Link className = "flex items-center px-4 text-md text-white font-bold hover:cursor-pointer hover:bg-white hover:text-blue-800" to = "/add-hotel">Add Hotel</Link>
           <SignOutButton />
           </>
           :<Link className='flex items-center px-4 text-md text-blue-800 font-bold bg-white hover:cursor-pointer hover:bg-gray-300' to="/login">Log in</Link>

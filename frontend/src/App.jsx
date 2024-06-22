@@ -9,8 +9,12 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
+import {useAuthContext} from "./context/AuthContext";
+import AddHotel from "./pages/AddHotel";
 
 const App = () => {
+
+  const {isLoggedIn} = useAuthContext();
   return (
     <Router>
       <Routes>
@@ -18,6 +22,12 @@ const App = () => {
         <Route path = "/about" element={<Layout component={About} />}></Route>
         <Route path="/register" element={<Layout component={Signup} />}></Route>
         <Route path="/login" element={<Layout component={Signin} />}></Route>
+
+        {isLoggedIn && 
+        <>
+          <Route path = "/add-hotel" element={<Layout component={AddHotel}></Layout>}></Route>
+        </>
+        }
         <Route path="*" element={<Navigate to="/"></Navigate>}></Route>
       </Routes>
     </Router>

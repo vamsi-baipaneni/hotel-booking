@@ -7,6 +7,14 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const logoutValidateRoutes = require('./routes/logoutValidateRoutes');
 const cookieParser = require('cookie-parser');
+const cloudinary = require('cloudinary');
+const myHotelRoutes = require("./routes/my-hotels");
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET_KEY
+})
 
 const MONGO_URL = process.env.MONGO_URL;
 const PORT = process.env.PORT;
@@ -40,7 +48,8 @@ app.get("/api/test", async (req,res)=>{
 app.use("/api/auth", userRoutes);
 app.use("/api/users", authRoutes);
 app.use("/api/verify", logoutValidateRoutes);
+app.use("/api/my-hotels", myHotelRoutes);
 
 app.listen(PORT, ()=>{
-    console.log("server running on port 3000");
+    console.log(`server runnning on ${PORT}`);
 });
