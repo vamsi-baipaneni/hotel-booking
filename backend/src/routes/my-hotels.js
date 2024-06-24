@@ -3,7 +3,7 @@ const multer = require('multer');
 const cloudinary = require('cloudinary');
 const Hotel = require('../models/hotel')
 const verify = require('../middleware/auth');
-const { check, validationResult, body } = require('express-validator');
+const { validationResult, body } = require('express-validator');
 
 const router = express.Router();
 
@@ -62,6 +62,31 @@ router.post('/',
     catch(e){
         console.log("error creating hotel: ", e);
         res.status(500).json({message: "Something went wrong!"});
+    }
+})
+
+router.get("/", verify, async(req, res)=>{
+    try{
+        const hotels = await Hotel.find({userId: req.userId});
+        return res.json(hotels);
+    }
+    catch(errors){
+        res.status(500).json({message: "Something went wrong"});
+    }
+})
+
+router.get("/:id", verify, async(req, res)=>{
+    // /api/my-hotels/99492952532 will grab the number in url using /:id which will be stored in request params.
+    const id = req.params.id.toString();
+    try{
+        const hotel = await Hotel.findOne({
+            _id: id,
+            userId: req.userId
+        });
+        return res.status(201).json(hotel);
+    }
+    catch(e){
+        res.status(500).json({message: "Something went wrong"});
     }
 })
 

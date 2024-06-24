@@ -10,7 +10,10 @@ import About from './pages/About';
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import {useAuthContext} from "./context/AuthContext";
+import MyHotels from "./pages/MyHotels";
 import AddHotel from "./pages/AddHotel";
+import EditHotel from "./pages/EditHotel";
+
 
 const App = () => {
 
@@ -26,6 +29,8 @@ const App = () => {
         {isLoggedIn && 
         <>
           <Route path = "/add-hotel" element={<Layout component={AddHotel}></Layout>}></Route>
+          <Route path = '/edit-hotel/:hotelId' element={<Layout component={EditHotel}></Layout>}></Route>
+          <Route path = "/my-hotels" element={<Layout component={MyHotels}></Layout>}></Route>
         </>
         }
         <Route path="*" element={<Navigate to="/"></Navigate>}></Route>

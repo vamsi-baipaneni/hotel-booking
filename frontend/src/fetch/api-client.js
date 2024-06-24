@@ -66,3 +66,27 @@ export const addHotel = async(hotelFormData)=>{
         throw new Error(`Error Adding Hotel ${response.status} ${response.statusText}`);
     }
 }
+
+export const myHotels = async()=>{
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels`,{
+        credentials: 'include',
+    });
+
+    if (!response.ok){
+        throw new Error(`Error retrieving Hotels ${response.status} ${response.statusText}`)
+    }
+    
+    return response.json();
+}
+
+export const findHotelById = async(hotelId)=>{
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels/${hotelId}`,{
+        credentials: 'include',
+    });
+
+    if(!response.ok){
+        throw new Error(`Error retrieving Hotels ${response.status} ${response.statusText}`)
+    }
+
+    return response.json()
+}

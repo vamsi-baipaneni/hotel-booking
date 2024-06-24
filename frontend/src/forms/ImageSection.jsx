@@ -2,8 +2,8 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 const ImageSection = () => {
-    const { register, formState: { errors }, watch, setValue } = useFormContext();
-    const totalImages = watch('imageFiles');
+    const { formState: { errors }, watch, setValue, getValues } = useFormContext();
+    const totalImages = watch('imageFiles') || [];
 
     const arrayToFileList = (filesArray) =>{
         const dataTransfer = new DataTransfer();
@@ -32,7 +32,10 @@ const ImageSection = () => {
                 <input 
                     type='file' 
                     multiple 
-                    accept='image/*' 
+                    accept='image/*'
+                    onChange={handleImageChange}
+
+                    /*
                     {...register('imageFiles', {
                         validate: (imageFiles) => {
                             if (imageFiles.length === 0) {
@@ -41,14 +44,15 @@ const ImageSection = () => {
                             return true;
                         }
                     })}
-                    onChange={handleImageChange}
+                    */
+                    
                     disabled={totalImages.length >= 6} 
                     className='w-full'
                 />
                 {errors.imageFiles && <span className='text-red-500 font-semibold'>{errors.imageFiles.message}</span>}
 
                 <div className='flex flex-wrap gap-2'>
-                    {Array.from(totalImages).map((file, index) => (
+                    {Array.from(getValues('imageFiles') || []).map((file, index) => (
                         <div key={index} className='relative'>
                             <img 
                                 src={URL.createObjectURL(file)} 

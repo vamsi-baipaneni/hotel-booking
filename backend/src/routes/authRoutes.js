@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/login",[
     check("email", "Valid email is required for login").isEmail().notEmpty(),
     check("password", "Password is required for login").notEmpty()
-],async (req, res)=>{
+], async (req, res)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         res.status(400).json({message: errors.array()});

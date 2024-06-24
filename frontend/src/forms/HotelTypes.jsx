@@ -16,8 +16,8 @@ const HotelTypes = () => {
                         <span>{type}</span>
                     </label>
                 ))}
-                {errors.type && <span className='text-red-500 font-semibold'>{errors.type.message}</span>}
             </div>
+            {errors.type && <span className='text-red-500 font-semibold'>{errors.type.message}</span>}
         </div>
     )
 }

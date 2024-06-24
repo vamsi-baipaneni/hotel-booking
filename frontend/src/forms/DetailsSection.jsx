@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 const DetailsSection = () => {
     const {register, formState: {errors}} = useFormContext();
   return (
-    <div className='flex flex-col gap-3'>
+    <div className='flex flex-col gap-4'>
       <h1 className='font-bold text-2xl mb-4'>Add Hotel</h1>
       <label className='font-semibold text-l flex-1'>
         Name
@@ -38,7 +38,7 @@ const DetailsSection = () => {
       </label>
       <label className='font-semibold text-l flex-1'>
         Price Per Night
-        <input defaultValue={0.0} type="number" {...register("pricePerNight",{
+        <input defaultValue={0.0} type='number' {...register("pricePerNight",{
             validate: (value)=>{
                 if(value<=0){
                     return "Price cannot be less than or equal to zero"
@@ -48,17 +48,13 @@ const DetailsSection = () => {
         })} className='mt-2 w-full px-2 py-1 rounded font-normal border border-gray-400' />
         {errors.pricePerNight && <span className='text-red-500 font-semibold'>{errors.pricePerNight.message}</span>}
       </label>
-      <label className='font-semibold text-l flex-1 gap-2'>
+      <label className='font-semibold text-l gap-2 flex-1'>
         Star Rating
         <select {...register("starrating", {
-            validate: (value)=>{
-                if(value===0){
-                    return "This Field is Required"
-                }
-                return true;
-            }
-        })} className='border border-gray-400 rounded ml-3'>
-            <option value={0}>
+            required: "Please provide a rating for the hotel",
+            validate: (value)=>value !== "0" || "Please provide a rating for the hotel"
+        })} className='border border-gray-400 rounded ml-2'>
+            <option key={0} value={0}>
                 Please select a option
             </option>
             <option key={1} value={1}>
@@ -77,7 +73,7 @@ const DetailsSection = () => {
                 5 Star
             </option>
         </select>
-        {errors.starrating && <span className='text-red-500 font-semibold'>{errors.starrating.message}</span>}
+        {errors.starrating && <span className='text-red-500 font-semibold ml-2'>{errors.starrating.message}</span>}
       </label>
     </div>
   )
