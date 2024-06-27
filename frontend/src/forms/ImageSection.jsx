@@ -1,76 +1,80 @@
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 const ImageSection = () => {
-    const { formState: { errors }, watch, setValue, getValues } = useFormContext();
-    const totalImages = watch('imageFiles') || [];
+    const {register ,watch, setValue, getValues, formState: {errors}, control} = useFormContext();
+    const images = useWatch({name: 'imageFiles', control});
+    const imageUrls = useWatch({name: 'imageUrls', control});
 
-    const arrayToFileList = (filesArray) =>{
-        const dataTransfer = new DataTransfer();
-        filesArray.forEach(file => dataTransfer.items.add(file));
-        return dataTransfer.files;
+    const handleDelete = (e, index)=>{
+        e.preventDefault();
+        const currentImages = images;
+        const updatedImages = Array.from(currentImages).filter((_,i)=>i!==index);
+        const datatransfer = new DataTransfer();
+        updatedImages.forEach(image=>datatransfer.items.add(image));
+        setValue('imageFiles',datatransfer.files);
     }
 
-    const handleImageChange = (event)=>{
-        const newImages = Array.from(event.target.files);
-        const currentImages = Array.from(totalImages);
-        const finalImages = arrayToFileList(currentImages.concat(newImages))
-        setValue('imageFiles', finalImages);
+    const handleUrlDelete = (e, index)=>{
+        e.preventDefault();
+        const currentUrls = imageUrls;
+        const updatedUrls = currentUrls.filter((_, i)=>i!==index);
+        setValue('imageUrls', updatedUrls);
     }
 
-    const removeImage = (index) => {
-        const currentFiles = Array.from(totalImages);
-        currentFiles.splice(index, 1);
-        const newFileList = arrayToFileList(currentFiles);
-        setValue('imageFiles', newFileList);
-    };
-
-    return (
-        <div>
-            <h2 className='text-xl font-semibold mb-4'>Upload Images</h2>
-            <div className='p-4 border rounded flex flex-col gap-4'>
-                <input 
-                    type='file' 
-                    multiple 
-                    accept='image/*'
-                    onChange={handleImageChange}
-
-                    /*
-                    {...register('imageFiles', {
-                        validate: (imageFiles) => {
-                            if (imageFiles.length === 0) {
-                                return "Please add at least one image";
-                            }
-                            return true;
-                        }
-                    })}
-                    */
-                    
-                    disabled={totalImages.length >= 6} 
-                    className='w-full'
-                />
-                {errors.imageFiles && <span className='text-red-500 font-semibold'>{errors.imageFiles.message}</span>}
-
-                <div className='flex flex-wrap gap-2'>
-                    {Array.from(getValues('imageFiles') || []).map((file, index) => (
-                        <div key={index} className='relative'>
-                            <img 
-                                src={URL.createObjectURL(file)} 
-                                alt={`Preview ${index}`} 
-                                className='w-20 h-20 object-cover'
-                            />
-                            <button 
-                                type='button' 
-                                onClick={() => removeImage(index)} 
-                                className='absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center'>
-                                &times;
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div>
+  return (
+    <div className='gap-4 flex flex-col'>
+        <div className='flex flex-row gap-1 items-center justify-start'>
+            <h2 className='text-2xl font-bold'>Upload Images</h2>
+            <span className='text-sm font-light mt-1.5'>(Max upload 6 images)</span>
         </div>
-    );
-};
+        <input
+        type='file'
+        multiple
+        accept='image/*'
+        {...register('imageFiles', {
+            validate: (images)=>{
+                const length = images.length+(imageUrls?.length || 0);
+                if(length<=0){
+                    return "Please upload atleast one image"
+                }
+                if(length>6){
+                    return "Cannot upload more than 6 images. Try again!"
+                }
+                return true;
+            }
+        })}
+        />
+        {errors.imageFiles && <span className='text-red-500 font-semibold'>{errors.imageFiles.message}</span>}
+        <div className='flex flex-wrap gap-2'>
+            {imageUrls && imageUrls.map((url,urlIndex)=>(
+                <div key={urlIndex} className='relative group'>
+                    <img
+                    src = {url}
+                    alt = {`Preview ${urlIndex}`}
+                    className='w-40 h-40 object-cover'
+                />
+                <button onClick={(e)=>handleUrlDelete(e,urlIndex)} className='absolute top-0 right-0 group-hover:bg-red-600 flex justify-center items-center text-white w-6 h-6 rounded-full text-xs'>
+                    &times;
+                </button>
+                </div>
+            ))}
+            {Array.from(images || []).map((image,index)=>(
+                <div className='relative group' key={index}>
+                    <img
+                        src={URL.createObjectURL(image)}
+                        alt = {`Preview ${index}`}
+                        className='w-40 h-40 object-cover'
+                    />
+                    <button onClick={(e)=>handleDelete(e,index)} className='absolute top-0 right-0 group-hover:bg-red-600 flex justify-center items-center text-white w-6 h-6 rounded-full text-xs'>
+                        &times;
+                    </button>
+                </div>
+            ))}
+
+        </div>
+    </div>
+  )
+}
 
 export default ImageSection;

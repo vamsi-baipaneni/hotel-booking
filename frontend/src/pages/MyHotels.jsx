@@ -40,24 +40,24 @@ const MyHotels = () => {
                     <div key ={key} className='border rounded-lg border-slate-500 flex flex-col gap-4 p-6'>
                         <h2 className='text-2xl font-semibold'>{hotel.name}</h2>
                         <span className='whitespace-pre-line text-xl'>{hotel.description}</span>
-                        <div className='grid grid-cols-5 gap-12 justify-between items-center'>
-                            <div className='border rounded-sm border-slate-500 flex items-center p-3 justify-center'>
+                        <div className='grid grid-cols-5 gap-12 justify-between items-center text-sm'>
+                            <div className='border rounded-sm border-slate-500 flex flex-col gap-2 items-center p-3 justify-center'>
                                 <BsMap className='mr-1'/>
                                 {hotel.city}, {hotel.country}
                             </div>
-                            <div className='border rounded-sm border-slate-500 flex items-center p-3 justify-center'>
+                            <div className='border rounded-sm border-slate-500 flex flex-col gap-2 items-center p-3 justify-center'>
                                 <BsBuilding className='mr-1'/>
                                 {hotel.type}
                             </div>
-                            <div className='border rounded-sm border-slate-500 flex items-center p-3 justify-center'>
+                            <div className='border rounded-sm border-slate-500 flex flex-col gap-2 items-center p-3 justify-center'>
                                 <BiMoney className='mr-1'/>
                                 ${hotel.pricePerNight} Night
                             </div>
-                            <div className='border rounded-sm border-slate-500 flex items-center p-3 justify-center text-ellipsis'>
+                            <div className='border rounded-sm border-slate-500 flex flex-col gap-2 items-center p-3 justify-center text-ellipsis'>
                                 <BiHotel className='mr-1'/>
                                 {hotel.adults} Adult, {hotel.children} Children
                             </div>
-                            <div className='border rounded-sm border-slate-500 flex items-center p-3 justify-center'>
+                            <div className='border rounded-sm border-slate-500 flex flex-col gap-2 items-center p-3 justify-center'>
                                 <BiStar className='mr-1'/>
                                 {parseInt(hotel.starrating,10)} Star Rating
                             </div>

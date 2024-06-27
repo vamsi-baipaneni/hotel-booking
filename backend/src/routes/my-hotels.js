@@ -41,14 +41,7 @@ router.post('/',
         const imageFiles = req.files
         const newhotel = req.body
         //upload files to cloudinary and get urls
-        const uploadPromises = imageFiles.map(async(image)=>{
-            const b64 = Buffer.from(image.buffer).toString("base64");
-            let dataURI = "data:"+image.mimetype+";base64,"+b64;
-            const res = await cloudinary.v2.uploader.upload(dataURI);
-            return res.url;
-        });
-
-        const imageURLs = await Promise.all(uploadPromises);
+        const imageURLs = await uploadImages(imageFiles);
         //if upload is success add hotel to database
         newhotel.imageUrls = imageURLs;
         newhotel.lastUpdated = new Date(0);
@@ -88,6 +81,43 @@ router.get("/:id", verify, async(req, res)=>{
     catch(e){
         res.status(500).json({message: "Something went wrong"});
     }
+});
+
+router.put(":/id", verify, upload.array('imageFiles'), async(req, res)=>{
+    const id = req.params.id.toString();
+    try{
+        const updatedHotel = req.body;
+        updatedHotel.lastUpdated = Date.now();
+        const hotel = await Hotel.findOneAndUpdate({
+            userId: req.userId,
+            _id: id
+        }, updatedHotel, {new: true});
+
+        if(!hotel){
+            res.status(400).json({message: "Hotel does not exist"});
+        }
+        const images = req.files;
+        const updatedImageUrls = await uploadImages(images);
+
+        hotel.imageUrls = [...(updatedImageUrls || []), ...(hotel.imageUrls || [])];
+        await hotel.save();
+        res.status(201).json(hotel);
+    }
+    catch(error){
+        res.status(500).json({message: "Something went wrong"});
+    }
 })
+
+async function uploadImages(imageFiles) {
+    const uploadPromises = imageFiles.map(async (image) => {
+        const b64 = Buffer.from(image.buffer).toString("base64");
+        let dataURI = "data:" + image.mimetype + ";base64," + b64;
+        const res = await cloudinary.v2.uploader.upload(dataURI);
+        return res.url;
+    });
+
+    const imageURLs = await Promise.all(uploadPromises);
+    return imageURLs;
+}
 
 module.exports = router;
