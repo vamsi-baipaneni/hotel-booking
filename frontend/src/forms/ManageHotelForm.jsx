@@ -5,6 +5,7 @@ import HotelTypes from './HotelTypes';
 import HotelFacilities from './HotelFacilities';
 import GuestSection from './GuestSection';
 import ImageSection from './ImageSection';
+import PropTypes from 'prop-types';
 
 const ManageHotelForm = ({onSave,isLoading,hotelData}) => {
   const methods = useForm({
@@ -22,6 +23,9 @@ const ManageHotelForm = ({onSave,isLoading,hotelData}) => {
 
   const onSubmit = handleSubmit((formDataJson)=>{
     const formData = new FormData();
+    if(hotelData){
+      formData.append('hotelId', hotelData._id);
+    }
     formData.append('name',formDataJson.name);
     formData.append('city',formDataJson.city);
     formData.append('country',formDataJson.country);
@@ -44,6 +48,10 @@ const ManageHotelForm = ({onSave,isLoading,hotelData}) => {
       const file = formDataJson.imageFiles[i];
       formData.append(`imageFiles`, file);
     }
+
+    for(const[key, value] of formData){
+      console.log(key+" "+value)
+    }
     onSave(formData);
   });
 
@@ -65,4 +73,10 @@ const ManageHotelForm = ({onSave,isLoading,hotelData}) => {
   )
 }
 
-export default ManageHotelForm
+ManageHotelForm.propTypes = {
+  onSave: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  hotelData: PropTypes.object,
+};
+
+export default ManageHotelForm;

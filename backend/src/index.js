@@ -9,6 +9,7 @@ const logoutValidateRoutes = require('./routes/logoutValidateRoutes');
 const cookieParser = require('cookie-parser');
 const cloudinary = require('cloudinary');
 const myHotelRoutes = require("./routes/my-hotels");
+const hotelRoutes = require("./routes/findHotels")
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -49,6 +50,7 @@ app.use("/api/auth", userRoutes);
 app.use("/api/users", authRoutes);
 app.use("/api/verify", logoutValidateRoutes);
 app.use("/api/my-hotels", myHotelRoutes);
+app.use("/api/hotels", hotelRoutes);
 
 app.listen(PORT, ()=>{
     console.log(`server runnning on ${PORT}`);

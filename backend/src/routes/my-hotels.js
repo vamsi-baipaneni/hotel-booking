@@ -83,18 +83,18 @@ router.get("/:id", verify, async(req, res)=>{
     }
 });
 
-router.put(":/id", verify, upload.array('imageFiles'), async(req, res)=>{
-    const id = req.params.id.toString();
+router.put("/:id", verify, upload.array('imageFiles'), async(req, res)=>{
+    
     try{
         const updatedHotel = req.body;
         updatedHotel.lastUpdated = Date.now();
         const hotel = await Hotel.findOneAndUpdate({
             userId: req.userId,
-            _id: id
+            _id: req.params.id
         }, updatedHotel, {new: true});
 
         if(!hotel){
-            res.status(400).json({message: "Hotel does not exist"});
+            res.status(404).json({message: "Hotel does not exist"});
         }
         const images = req.files;
         const updatedImageUrls = await uploadImages(images);

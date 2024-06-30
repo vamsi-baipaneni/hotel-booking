@@ -92,8 +92,9 @@ export const findHotelById = async(hotelId)=>{
 }
 
 export const updateHotelById = async(hotelFormData)=>{
-    const response = await fetch(`${API_BASE_URL}/api/my-hotels/${hotelFormData.get(hotelId)}`,{
-        credentials: true,
+    
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels/${hotelFormData.get("hotelId")}`,{
+        credentials: 'include',
         method: 'PUT',
         body: hotelFormData
     });
