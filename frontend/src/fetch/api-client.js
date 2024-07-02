@@ -55,6 +55,15 @@ export const signOut = async() =>{
 }
 
 export const addHotel = async(hotelFormData)=>{
+
+    const numericFields = ['adults', 'children', 'pricePerNight', 'starrating'];
+
+    numericFields.forEach(field => {
+        if (hotelFormData.has(field)) {
+            hotelFormData.set(field, parseInt(hotelFormData.get(field), 10));
+        }
+    });
+    
     const response = await fetch(`${API_BASE_URL}/api/my-hotels`,{
         credentials: 'include',
         method: 'POST',
@@ -105,3 +114,21 @@ export const updateHotelById = async(hotelFormData)=>{
 
     return response.json()
 }
+
+
+export const searchHotels = async (searchParams) => {
+    const queryParams = new URLSearchParams();
+
+    if (searchParams.destination) queryParams.append('destination', searchParams.destination);
+    if (searchParams.checkIn) queryParams.append('checkIn', searchParams.checkIn);
+    if (searchParams.checkOut) queryParams.append('checkOut', searchParams.checkOut);
+    if (searchParams.adultCount) queryParams.append('adultCount', searchParams.adultCount);
+    if (searchParams.childCount) queryParams.append('childCount', searchParams.childCount);
+    if (searchParams.page) queryParams.append('page', searchParams.page);
+
+    const response = await fetch(`${API_BASE_URL}/api/hotels/search?${queryParams}`);
+
+    if (!response.ok) throw new Error("Something went wrong");
+
+    return response.json();
+};

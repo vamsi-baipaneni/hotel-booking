@@ -13,7 +13,7 @@ import {useAuthContext} from "./context/AuthContext";
 import MyHotels from "./pages/MyHotels";
 import AddHotel from "./pages/AddHotel";
 import EditHotel from "./pages/EditHotel";
-
+import Search from "./pages/Search";
 
 const App = () => {
 
@@ -25,6 +25,7 @@ const App = () => {
         <Route path = "/about" element={<Layout component={About} />}></Route>
         <Route path="/register" element={<Layout component={Signup} />}></Route>
         <Route path="/login" element={<Layout component={Signin} />}></Route>
+        <Route path="/search" element={<Layout component={Search}/>} ></Route>
 
         {isLoggedIn && 
         <>

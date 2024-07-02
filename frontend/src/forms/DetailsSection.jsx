@@ -38,7 +38,7 @@ const DetailsSection = () => {
       </label>
       <label className='font-semibold text-l flex-1'>
         Price Per Night
-        <input defaultValue={0.0} type='number' {...register("pricePerNight",{
+        <input defaultValue={0} type='number' step={0.01} {...register("pricePerNight",{
             validate: (value)=>{
                 if(value<=0){
                     return "Price cannot be less than or equal to zero"
@@ -52,7 +52,7 @@ const DetailsSection = () => {
         Star Rating
         <select {...register("starrating", {
             required: "Please provide a rating for the hotel",
-            validate: (value)=>value !== "0" || "Please provide a rating for the hotel"
+            validate: (value)=>value !== 0 || "Please provide a rating for the hotel"
         })} className='border border-gray-400 rounded ml-2'>
             <option key={0} value={0}>
                 Please select a option

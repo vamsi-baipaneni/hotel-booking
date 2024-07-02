@@ -9,11 +9,11 @@ const hotelSchema = new Schema({
     country: {type: String, required: true},
     description: {type: String, required: true},
     type: {type: String, required: true},
-    adults: {type: String, required: true},
-    children: {type: String, required: true},
+    adults: {type: Number, required: true},
+    children: {type: Number, required: true},
     facilities: [{type: String, required: true}],
-    pricePerNight: {type: String, required: true},
-    starrating: {type: String, required: true, min: 1, max: 5},
+    pricePerNight: {type: Number, required: true},
+    starrating: {type: Number, required: true, min: 1, max: 5},
     imageUrls: [{type: String, required: true}],
     lastUpdated: {type: Date, required: true}
 });

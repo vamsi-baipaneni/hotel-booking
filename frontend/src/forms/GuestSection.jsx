@@ -9,7 +9,7 @@ const GuestSection = () => {
       <div className='grid grid-cols-2 pt-5 pb-7 pr-2 pl-2 gap-5 bg-gray-300'>
         <label className='text-sm font-semibold'>
             Adults
-            <input className="border rounded w-full py-1 px-2" type="number" {...register('adults',{
+            <input defaultValue={1} className="border rounded w-full py-1 px-2" type="number" {...register('adults',{
                 required: "This field is required",
                 min: 1
             })}/>

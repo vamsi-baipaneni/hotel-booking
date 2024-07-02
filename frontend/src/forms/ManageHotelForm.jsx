@@ -40,9 +40,11 @@ const ManageHotelForm = ({onSave,isLoading,hotelData}) => {
       formData.append(`facilities[${index}]`, facility);
     });
 
-    formDataJson.imageUrls.forEach((url, index) => {
-      formData.append(`imageUrls[${index}]`, url);
-    });
+    if(formDataJson.imageUrls){
+      formDataJson.imageUrls.forEach((url, index) => {
+        formData.append(`imageUrls[${index}]`, url);
+      });
+    }
     
     for(let i=0;i<formDataJson.imageFiles.length;i++){
       const file = formDataJson.imageFiles[i];

@@ -1,34 +1,29 @@
-import React, {useContext, createContext, useReducer} from 'react';
+import React, {useContext, createContext, useState} from 'react';
 import PropTypes from 'prop-types';
-import searchReducer from './searchReducer';
 const SearchContext = createContext(undefined);
 
-const SearchParams = {
-    destination: '',
-    checkIn: '',
-    checkOut: '',
-    adultCount: 0,
-    childCount: 0,
-    hotelId: '',
-  };
-
 export const SearchContextProvider = ({children}) => {
-    const [search, dispatch] = useReducer(searchReducer, SearchParams);
+    const {cIn, cOut} = new Date();
+    const [destination, setDestination] = useState('');
+    const [checkIn, setCheckIn] = useState(cIn);
+    const [checkOut, setCheckOut] = useState(cOut);
+    const [adultCount, setAdultCount] = useState(1);
+    const [childCount, setChildCount] = useState(0);
+    const [hotelId, setHotelId] = useState('');
 
     const handleSearchTask = (destination, checkIn, checkOut, adultCount, childCount, hotelId)=>{
-        dispatch({
-            type: "search",
-            destination: destination,
-            checkIn: checkIn,
-            checkOut: checkOut,
-            adultCount: adultCount,
-            childCount: childCount,
-            hotelId: hotelId || "",
-            })
+      setDestination(destination);
+      setCheckIn(checkIn)
+      setCheckOut(checkOut)
+      setAdultCount(adultCount)
+      setChildCount(childCount)
+      if(hotelId){
+        setHotelId(hotelId)
+      }
     };
 
   return (
-    <SearchContext.Provider value={{search, handleSearchTask}}>
+    <SearchContext.Provider value={{destination, checkIn, checkOut, adultCount, childCount, hotelId, handleSearchTask}}>
       {children}
     </SearchContext.Provider>
   )
