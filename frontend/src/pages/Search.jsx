@@ -5,21 +5,38 @@ import * as apiClient from '../fetch/api-client'
 import { BsFillStarFill, BsMoonStars, BsStar, BsStarFill } from 'react-icons/bs';
 import ImageDisplay from '../components/ImageDisplay';
 import Pagination from '../components/Pagination';
+import StarRatingFilter from '../components/StarRatingFIlter';
+import HotelTypeFilter from '../components/HotelTypeFilter';
+import HotelFacilitiesFilter from '../components/HotelFacilitiesFilter';
+import MaxPriceFilter from '../components/MaxPriceFilter';
 
 const Search = () => {
     const search = useSearchProvider();
+
     const [page,setPage] = useState(1);
+    const [stars, setStars] = useState([]);
+    const [types, setTypes] = useState([]);
+    const [facilities, setFacilities] = useState([]);
+    const [maxPrice, setMaxPrice] = useState('');
     const searchParams = {
         destination: search.destination.toString(),
-        checkIn: search.checkIn.toISOString(),
-        checkOut: search.checkOut.toISOString(),
+        checkIn: search.checkIn? search.checkIn.toISOString() : '',
+        checkOut: search.checkOut? search.checkOut.toISOString() : '',
         adultCount: search.adultCount.toString(),
         childCount: search.childCount.toString(),
-        page: page.toString()
+        page: page.toString(),
+        stars: stars,
+        types: types,
+        maxPrice: maxPrice,
     }
     const {data, isLoading} = useQuery(['findHotels',searchParams], 
-    ()=>apiClient.searchHotels(searchParams))
-    console.log(data)
+    ()=>apiClient.searchHotels(searchParams),{
+        enabled: !!search.checkIn && !!search.checkOut,
+    })
+
+    if(!search.checkIn || !search.checkOut){
+        return(<div className='flex items-center justify-center text-3xl text-gray-500'>Please select proper dates</div>)
+    }
 
     if(isLoading){
         return(
@@ -29,13 +46,43 @@ const Search = () => {
         )
     }
 
+    const handleStarsChange = (event)=>{
+        const selectedStar = event.target.value;
+        
+        setStars((prevStars)=>event.target.checked ? [...prevStars, selectedStar] : prevStars.filter((star)=> star!==selectedStar))
+    }
+
+    const handleTypesChange = (event)=>{
+        const selectedType = event.target.value;
+
+        setTypes((prevTypes)=>event.target.checked? [...prevTypes, selectedType] : prevTypes.filter(type=>type!==selectedType))
+    }
+
+    const handleFacilitiesChange = (event)=>{
+        const selectedFacilitiy = event.target.value;
+
+        setFacilities(prevFacilities => event.target.checked? [...prevFacilities,selectedFacilitiy]: prevFacilities.filter(facility=>facility!==selectedFacilitiy));
+    }
+
+    const handleMaxPriceChange = (price)=>{
+        setMaxPrice(price);
+    }
+
     return (
         <div className='flex flex-col lg:flex-row gap-5'>
-            <div className='w-[150px]'>
-                hey
+            <div className='flex-1 lg:flex-none lg:w-1/6 border lg:sticky lg:top-10 rounded-lg p-5 self-start'>
+                <div className='space-y-5 flex flex-row lg:flex-col'>
+                    <h3 className='text-lg font-semibold border-b pb-5'>
+                        Filter By:
+                    </h3>
+                    <StarRatingFilter selectedStars={stars} onChange={handleStarsChange}/>
+                    <HotelTypeFilter selectedTypes={types} onChange={handleTypesChange}/>
+                    <HotelFacilitiesFilter selectedFacilities={facilities} onChange={handleFacilitiesChange}/>
+                    <MaxPriceFilter currentMaxPrice = {maxPrice} onChange = {handleMaxPriceChange}/>
+                </div>
             </div>
-            <div className='flex flex-grow flex-col gap-2'>
-                <h1 className='font-bold text-l'>{data.pagination.total} Hotels found 
+            <div className='flex flex-1 flex-grow flex-col gap-2'>
+                <h1 className='font-semibold text-2xl'>{data.pagination.total} Hotels found 
                     {search.destination ? ` in ${search.destination}` : ""}
                 </h1>
                 {data.hotels.map((hotel, index)=>(
@@ -53,7 +100,7 @@ const Search = () => {
                                     {hotel.name}
                                 </h1>
                             </div>
-                            <span className='text-s font-light tracking-tight pb-8 line-clamp-4'>
+                            <span className='text-s font-light tracking-tight pb-8 line-clamp-6'>
                                 {hotel.description}
                             </span>
                             <div className='grid grid-cols-2 items-end whitespace-nowrap'>
@@ -75,7 +122,7 @@ const Search = () => {
                         </div>
                     </div>
                 ))}
-                <div>
+                <div className='flex items-center justify-center mt-10'>
                     <Pagination page={data.pagination.page || 1} pages={data.pagination.pages || 1} onPageChange={(page)=>setPage(page)}/>
                 </div>
             </div>

@@ -21,12 +21,10 @@ const SearchBar = () => {
   }
 
   const handleClear =(event)=>{
-    const checkIn = new Date();
-    const checkOut = new Date();
     event.preventDefault();
     setDestination("");
-    setCheckIn(checkIn);
-    setCheckOut(checkOut);
+    setCheckIn("");
+    setCheckOut("");
     setAdultCount(1);
     setChildCount(0);
   }
@@ -76,7 +74,7 @@ const SearchBar = () => {
         <DatePicker
           selected={checkIn}
           value={checkIn}
-          onChange={(date) => setCheckIn(date)}
+          onChange={(date) => {setCheckIn(date)}}
           placeholderText="--Select--"
           selectsStart
           startDate={checkIn}
@@ -96,7 +94,6 @@ const SearchBar = () => {
           placeholderText="--Select--"
           selectsEnd
           startDate={checkIn}
-          endDate={checkOut}
           minDate={checkIn}
           maxDate={maxDate}
           className="w-full focus:outline-none"

@@ -63,7 +63,7 @@ export const addHotel = async(hotelFormData)=>{
             hotelFormData.set(field, parseInt(hotelFormData.get(field), 10));
         }
     });
-    
+
     const response = await fetch(`${API_BASE_URL}/api/my-hotels`,{
         credentials: 'include',
         method: 'POST',
@@ -125,8 +125,21 @@ export const searchHotels = async (searchParams) => {
     if (searchParams.adultCount) queryParams.append('adultCount', searchParams.adultCount);
     if (searchParams.childCount) queryParams.append('childCount', searchParams.childCount);
     if (searchParams.page) queryParams.append('page', searchParams.page);
+    if(searchParams.stars){
+        searchParams.stars.forEach(star =>{
+            queryParams.append("stars", star)
+        })
+    }
+    if(searchParams.types){
+        searchParams.types.forEach(type=>{
+            queryParams.append("types", type);
+        })
+    }
+    if(searchParams.maxPrice){
+        queryParams.append('maxPrice', searchParams.maxPrice);
+    }
 
-    const response = await fetch(`${API_BASE_URL}/api/hotels/search?${queryParams}`);
+    const response = await fetch(`${API_BASE_URL}/api/hotels/search?${queryParams.toString()}`);
 
     if (!response.ok) throw new Error("Something went wrong");
 

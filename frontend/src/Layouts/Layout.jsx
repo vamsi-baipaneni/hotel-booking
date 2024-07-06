@@ -13,7 +13,7 @@ const Layout = ({component: Component}) => {
       <div className='container mx-auto'>
         <SearchBar/>
       </div>
-      <div className='container mx-auto flex-1 py-10 relative'>
+      <div className='container flex items-center justify-center mx-auto flex-1 py-10 relative'>
         <Component />
       </div>
       <Footer />

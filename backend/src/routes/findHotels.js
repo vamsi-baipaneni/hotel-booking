@@ -4,7 +4,7 @@ const Hotel = require('../models/hotel');
 
 const router = express.Router();
 
-router.get("/search", verify, async(req, res)=>{
+router.get("/search", async(req, res)=>{
     try{
 
         const query = constructSearchQuery(req.query);
@@ -20,8 +20,10 @@ router.get("/search", verify, async(req, res)=>{
             case "pricePerNightDesc":
                 sortOptions = {pricePerNight: -1}
                 break;
+            default:
+                sortOptions = {}
         }
-        const pageNumber = parseInt(req.query.pageNumber ? req.query.pageNumber.toString() : "1");
+        const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
         const tilesPerPage = 5;
         //page 2 then 1*5 we skip first 5 hotels to access next 5;
         const skip = (pageNumber-1)*tilesPerPage;
@@ -44,7 +46,7 @@ router.get("/search", verify, async(req, res)=>{
 })
 
 const constructSearchQuery = (queryParams)=>{
-    const constructedQuery = {}
+    let constructedQuery = {}
 
     if(queryParams.destination && queryParams.destination.trim() !== "" ){
         constructedQuery.$or = [
@@ -53,18 +55,36 @@ const constructSearchQuery = (queryParams)=>{
         ];
     }
 
-    if(queryParams.adultCount){
-        constructedQuery.adultCount = {
-            $gte: parseInt(queryParams.adultCount.toString())
+    constructedQuery.adults = {
+        $gte: parseInt(queryParams.adultCount.toString())
+    }
+    constructedQuery.children = {
+        $gte: parseInt(queryParams.childCount.toString())
+    }
+
+    if(queryParams.facilities){
+        constructedQuery.facilities = {
+            $all: Array.isArray(queryParams.facilities)? queryParams.facilities.toString() : [queryParams.facilities.toString()]
         }
     }
 
-    if(queryParams.childCount){
-        constructedQuery.childCount = {
-            $gte: parseInt(queryParams.childCount.toString())
+    if(queryParams.types){
+        constructedQuery.type = {
+            $in: Array.isArray(queryParams.types)? queryParams.types.toString() : [queryParams.types.toString()]
         }
     }
 
+    if(queryParams.stars) {
+        const starRating = Array.isArray(queryParams.stars) ?
+         queryParams.stars.map((star)=>parseInt(star.toString())) : parseInt(queryParams.stars.toString())
+        constructedQuery.starrating = {$eq: starRating}
+    }
+
+    if(queryParams.maxPrice){
+        constructedQuery.pricePerNight = {
+            $lte: parseInt(queryParams.maxPrice.toString())
+        }
+    }
     return constructedQuery;
 }
 
